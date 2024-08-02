@@ -1,0 +1,10 @@
+# high
+- save results into csv files
+- make privkey and pubkey classes for ecc code
+- finish ecc encryption/decryption algorithm
+
+# low
+- make a decorator from timeit to evaluate functions
+- make a decorator from get_mwh_data() for evaluating energy consumption of functions
+- add function to store rsa keys
+- add function to store ecc keys
