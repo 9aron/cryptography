@@ -55,7 +55,7 @@ for lvl, r_ks, e_ks in zip(SEC_LVL, RSA_KEYSIZE, EC):
     r_des = f"[+] generating {r_ks} bit rsa key"
     e_des = f"[+] generating {e_ks[4:7]} bit ecc key"
 
-    rsa_avg_t = eval_rsa_keygen(sock, r_ks, r_des)
+    rsa_avg_t = eval_rsa_keygen(sock, int(r_ks), r_des)
     ecc_avg_t = eval_ecc_keygen(sock, e_ks, e_des)
 
     data.append({'sec_lvl': lvl, 'rsa_keysize': r_ks, 'rsa_energy': rsa_avg_t, 'ecc_keysize': int(e_ks[4:7]), 'ecc_energy': ecc_avg_t})
