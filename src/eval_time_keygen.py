@@ -5,20 +5,15 @@ import timeit
 import pprint
 from tqdm import tqdm
 
-from rsa import newkeys
-#from ecc import make_keypair, get_curve
-#from config import N_TEST, MAC, RSA_KEYSIZE, EC
 from config import *
+from rsa import newkeys
 
-
-bar_format = "{l_bar}{bar} | {n_fmt}/{total_fmt} "
 
 csv_file_path = 'csv/keygen_exectime.csv' # TODO put this in config files, and make code for it to exec well
 
 
-
 # Measure execution time for RSA key generation
-def eval_rsa_keygen(key_size, desc, form=bar_format, n_t=N_TEST):
+def eval_rsa_exectime(key_size, desc, form=BAR_FORMAT, n_t=N_TEST):
     rsa_setup_code = """
 from rsa import newkeys
 """
@@ -34,7 +29,7 @@ from rsa import newkeys
 
 
 # Measure execution time for ECC key generation
-def eval_ecc_keygen(curve, desc, form=bar_format, n_t=N_TEST):
+def eval_ecc_exectime(curve, desc, form=BAR_FORMAT, n_t=N_TEST):
     ecc_setup_code = f"""
 from ecc import make_keypair, get_curve
 c = get_curve('{curve}')
@@ -59,8 +54,8 @@ for lvl, r_ks, e_ks in zip(SEC_LVL, RSA_KEYSIZE, EC):
     r_des = f"[+] generating {r_ks} bit rsa key"
     e_des = f"[+] generating {e_ks[4:7]} bit ecc key"
 
-    rsa_avg_t = eval_rsa_keygen(r_ks, r_des)
-    ecc_avg_t = eval_ecc_keygen(e_ks, e_des)
+    rsa_avg_t = eval_rsa_exectime(r_ks, r_des)
+    ecc_avg_t = eval_ecc_exectime(e_ks, e_des)
 
     data.append({'sec_lvl': lvl, 'rsa_keysize': r_ks, 'rsa_exec_time': rsa_avg_t, 'ecc_keysize': int(e_ks[4:7]), 'ecc_exec_time': ecc_avg_t})
 
@@ -79,6 +74,7 @@ with open(csv_file_path, mode='w', newline='') as csv_file:
         writer.writerow(row)
 
 print(f"[+] Data has been written to {csv_file_path}")
+
 
 # Print results
 if PRINT:

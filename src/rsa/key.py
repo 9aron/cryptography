@@ -2,13 +2,13 @@
 
 # TODO delete unneeded comments
 
-import os
 import sys
 import typing
 
 import rsa.prime as prime
 import rsa.util as util
 
+sys.set_int_max_str_digits(0)
 
 DEFAULT_EXPONENT = 65537
 
