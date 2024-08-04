@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import csv
 import timeit
 import pprint
@@ -10,6 +11,8 @@ from rsa import newkeys
 
 
 csv_file_path = 'csv/keygen_exectime.csv' # TODO put this in config files, and make code for it to exec well
+
+SEC_LVL = SEC_LVL[3:4] # TODO change this when needed
 
 
 # Measure execution time for RSA key generation
@@ -65,13 +68,21 @@ for lvl, r_ks, e_ks in zip(SEC_LVL, RSA_KEYSIZE, EC):
 fieldnames = ['sec_lvl', 'rsa_keysize', 'rsa_exec_time', 'ecc_keysize', 'ecc_exec_time']
 
 # Writing data to csv
-with open(csv_file_path, mode='w', newline='') as csv_file:
-    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-    writer.writeheader()
+if os.path.exists(csv_file_path):
+    with open(csv_file_path, mode='a', newline='') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
-    # Write each row of data
-    for row in data:
-        writer.writerow(row)
+        # Write each row of data
+        for row in data:
+            writer.writerow(row)
+else:
+    with open(csv_file_path, mode='w', newline='') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+
+        # Write each row of data
+        for row in data:
+            writer.writerow(row)
 
 print(f"[+] Data has been written to {csv_file_path}")
 

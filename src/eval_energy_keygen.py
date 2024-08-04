@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import csv
 import timeit
 import pprint
@@ -12,6 +13,8 @@ from um25c import get_mwh_data, connect_to_usb_tester
 
 
 csv_file_path = 'csv/keygen_energy.csv' # TODO put this in config files, and make code for it to exec well
+
+SEC_LVL = SEC_LVL[3:4] # TODO change this when needed
 
 
 # Measure energy consumption for rsa key generation
@@ -68,13 +71,21 @@ sock.close()
 fieldnames = ['sec_lvl', 'rsa_keysize', 'rsa_energy', 'ecc_keysize', 'ecc_energy']
 
 # Writing data to csv
-with open(csv_file_path, mode='w', newline='') as csv_file:
-    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-    writer.writeheader()
+if os.path.exists(csv_file_path):
+    with open(csv_file_path, mode='a', newline='') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
-    # Write each row of data
-    for row in data:
-        writer.writerow(row)
+        # Write each row of data
+        for row in data:
+            writer.writerow(row)
+else:
+    with open(csv_file_path, mode='w', newline='') as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+
+        # Write each row of data
+        for row in data:
+            writer.writerow(row)
 
 print(f"[+] Data has been written to {csv_file_path}")
 
