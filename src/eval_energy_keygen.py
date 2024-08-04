@@ -65,7 +65,7 @@ sock.close()
 
 # csv
 # csv fields
-fieldnames = ['sec_lvl', 'rsa_keysize', 'rsa_exec_time', 'ecc_keysize', 'ecc_exec_time']
+fieldnames = ['sec_lvl', 'rsa_keysize', 'rsa_energy', 'ecc_keysize', 'ecc_energy']
 
 # Writing data to csv
 with open(csv_file_path, mode='w', newline='') as csv_file:
