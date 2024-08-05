@@ -12,7 +12,10 @@ from rsa import newkeys
 
 csv_file_path = 'csv/keygen_exectime.csv' # TODO put this in config files, and make code for it to exec well
 
-SEC_LVL = SEC_LVL[3:4] # TODO change this when needed
+# TODO change this when needed
+SEC_LVL = SEC_LVL[3:4]
+RSA_KEYSIZE = RSA_KEYSIZE[3:4]
+EC = EC[3:4]
 
 
 # Measure execution time for RSA key generation
