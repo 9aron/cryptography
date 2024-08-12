@@ -53,7 +53,7 @@ def eval_ecc_keygen(sock, curve, desc, form=BAR_FORMAT, n_t=N_TEST):
 # evaluation 
 print('[+] evaluating energy consumption for rsa and ecc')
 
-sock = connect_to_usb_tester()
+sock = connect_to_usb_tester(MAC)
 
 data = []
 for lvl, r_ks, e_ks in zip(SEC_LVL, RSA_KEYSIZE, EC):

@@ -5,8 +5,6 @@ import time
 import datetime
 import bluetooth
 
-import config
-
 
 def read_data(sock):
     sock.send(bytes([0xF0]))
@@ -17,9 +15,9 @@ def read_data(sock):
     return d
 
 
-def connect_to_usb_tester():
+def connect_to_usb_tester(addr):
     sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-    sock.connect((config.MAC, 1))
+    sock.connect((addr, 1))
     sock.settimeout(1.0)
     for _ in range(10):
         try:
@@ -34,8 +32,8 @@ def connect_to_usb_tester():
 
 
 def get_mwh_data(sock):
-
     d = b""
+
     while len(d) != 130:
         sock.send((0xF0).to_bytes(1, byteorder="big"))
         d += sock.recv(130)
@@ -48,7 +46,9 @@ def get_mwh_data(sock):
 
 
 if __name__ == '__main__':
-    sock = connect_to_usb_tester(config.MAC)
+    from config import MAC
+
+    sock = connect_to_usb_tester(MAC) # change config.MAC to the mac addr
 
     while True:
         print(get_mwh_data(sock))
