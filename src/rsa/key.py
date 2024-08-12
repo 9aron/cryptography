@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# TODO delete unneeded comments
-
 import sys
 import typing
 
@@ -12,6 +10,7 @@ sys.set_int_max_str_digits(0)
 
 DEFAULT_EXPONENT = 65537
 
+
 class PublicKey:
     __slots__ = ("n", "e")
 
@@ -19,34 +18,14 @@ class PublicKey:
         self.n = n
         self.e = e
 
-    def __getitem__(self, key: str) -> int:
-        return getattr(self, key)
-
     def __repr__(self) -> str:
-        return "PublicKey(%i, %i)" % (self.n, self.e)
+        return f"PublicKey({self.n}, {self.e})"
 
     def __getstate__(self) -> typing.Tuple[int, int]:
-        """Returns the key as tuple for pickling."""
         return self.n, self.e
 
     def __setstate__(self, state: typing.Tuple[int, int]) -> None:
-        """Sets the key from tuple."""
         self.n, self.e = state
-
-    def __eq__(self, other: typing.Any) -> bool:
-        if other is None:
-            return False
-
-        if not isinstance(other, PublicKey):
-            return False
-
-        return self.n == other.n and self.e == other.e
-
-    def __ne__(self, other: typing.Any) -> bool:
-        return not (self == other)
-
-    def __hash__(self) -> int:
-        return hash((self.n, self.e))
 
 
 class PrivateKey:
@@ -59,18 +38,8 @@ class PrivateKey:
         self.p = p
         self.q = q
 
-
-    def __getitem__(self, key: str) -> int:
-        return getattr(self, key)
-
     def __repr__(self) -> str:
-        return "PrivateKey(%i, %i, %i, %i, %i)" % (
-            self.n,
-            self.e,
-            self.d,
-            self.p,
-            self.q,
-        )
+        return f"PrivateKey({self.n}, {self.e}, {self.d}, {self.p}, {self.q})"
 
     def __getstate__(self) -> typing.Tuple:
         return self.n, self.e, self.d, self.p, self.q
@@ -78,32 +47,14 @@ class PrivateKey:
     def __setstate__(self, state: typing.Tuple) -> None:
         self.n, self.e, self.d, self.p, self.q
 
-    def __eq__(self, other: typing.Any) -> bool:
-        if other is None:
-            return False
-
-        if not isinstance(other, PrivateKey):
-            return False
-
-        return all([getattr(self, k) == getattr(other, k) for k in self.__slots__])
-
-    def __ne__(self, other: typing.Any) -> bool:
-        return not (self == other)
-
-    def __hash__(self) -> int:
-        return hash((self.n, self.e, self.d, self.p, self.q))
-
 
 def find_p_q(nbits: int) -> typing.Tuple[int, int]:
     total_bits = nbits * 2
 
-    # Make sure that p and q aren't too close or the factoring programs can
-    # factor n.
     shift = nbits // 16
     pbits = nbits + shift
     qbits = nbits - shift
 
-    # Choose the two initial primes
     p = prime.getprime(pbits)
     q = prime.getprime(qbits)
 
@@ -111,14 +62,11 @@ def find_p_q(nbits: int) -> typing.Tuple[int, int]:
         if p == q:
             return False
 
-        # Make sure we have just the right amount of bits
         found_size = util.bit_size(p * q)
         return total_bits == found_size
 
-    # Keep choosing other primes until they match our requirements.
     change_p = False
     while not is_acceptable(p, q):
-        # Change p on one iteration and q on the other
         if change_p:
             p = prime.getprime(pbits)
         else:
@@ -154,7 +102,6 @@ def calculate_keys_custom_exponent(p: int, q: int, exponent: int) -> typing.Tupl
 
 
 def gen_keys(nbits: int) -> typing.Tuple:
-    # Regenerate prime values, until calculate_keys_custom_exponent doesn't raise a  ValueError.
     while True:
         p, q = find_p_q(nbits // 2)
         try:
@@ -167,12 +114,10 @@ def gen_keys(nbits: int) -> typing.Tuple:
 
 
 def newkeys(nbits: int) -> typing.Tuple[PublicKey, PrivateKey]:
-    # Generate the key components
     result = gen_keys(nbits)
     if len(result) == 4:
         p, q, e, d = result
 
-    # Create the key objects
     n = p * q
     return (PublicKey(n, e), PrivateKey(n, e, d, p, q))
 
