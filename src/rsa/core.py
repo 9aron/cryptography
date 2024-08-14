@@ -1,10 +1,16 @@
-import itertools
-import typing
+import os
+import sys
+import gmpy2
 import hashlib
 from hmac import compare_digest
 
 import rsa.util as util
 from rsa.key import PublicKey, PrivateKey
+
+relative_path = os.path.join('..')
+sys.path.insert(0, relative_path)
+
+from config import GMP
 
 
 def assert_int(var: int, name: str) -> None:
@@ -25,7 +31,14 @@ def encrypt_int(message: int, ekey: int, n: int) -> int:
     if message >= n:
         raise OverflowError("The message %i is too long for n=%i" % (message, n))
 
-    return pow(message, ekey, n)
+    if GMP:
+        msg = gmpy2.mpz(message)
+        e_k = gmpy2.mpz(ekey)
+        md = gmpy2.mpz(n)
+
+        return gmpy2.powmod(msg, e_k, md)
+    else:
+        return pow(message, ekey, n)
 
 
 def decrypt_int(cyphertext: int, dkey: int, n: int) -> int:
@@ -33,7 +46,14 @@ def decrypt_int(cyphertext: int, dkey: int, n: int) -> int:
     assert_int(dkey, "dkey")
     assert_int(n, "n")
 
-    message = pow(cyphertext, dkey, n)
+    if GMP:
+        c = gmpy2.mpz(cyphertext)
+        d_k = gmpy2.mpz(dkey)
+        md = gmpy2.mpz(n)
+
+        message = gmpy2.powmod(c, d_k, md)
+    else:
+        message = pow(cyphertext, dkey, n)
     return message
 
 
