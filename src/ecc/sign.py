@@ -5,7 +5,7 @@ import secrets
 
 
 def hash_message(message):
-    return int(hashlib.sha256(message.encode()).hexdigest(), 16)
+    return int(hashlib.sha256(message).hexdigest(), 16)
 
 
 def generate_ecc_sig(private_key, message, curve):

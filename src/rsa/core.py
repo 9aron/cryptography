@@ -64,7 +64,7 @@ def encrypt(message: bytes, pub_key: PublicKey) -> bytes:
 
     payload = util.bytes2int(message)
     encrypted = encrypt_int(payload, pub_key.e, pub_key.n)
-    block = util.int2bytes(encrypted, keylength)
+    block = util.int2bytes(int(encrypted), keylength)
 
     return block
 
@@ -73,7 +73,7 @@ def decrypt(crypto: bytes, priv_key: PrivateKey) -> bytes:
     blocksize = util.byte_size(priv_key.n)
     encrypted = util.bytes2int(crypto)
     decrypted = decrypt_int(encrypted, priv_key.d, priv_key.n)
-    cleartext = util.int2bytes(decrypted, blocksize)
+    cleartext = util.int2bytes(int(decrypted), blocksize)
 
     return cleartext.lstrip(b'\x00')  # Strip any trailing zero bytes added during encryption
 
@@ -81,7 +81,7 @@ def decrypt(crypto: bytes, priv_key: PrivateKey) -> bytes:
 def sign_hash(hash_value: bytes, priv_key: PrivateKey) -> bytes:
     payload = util.bytes2int(hash_value)
     encrypted = decrypt_int(payload, priv_key.d, priv_key.n)
-    block = util.int2bytes(encrypted)
+    block = util.int2bytes(int(encrypted))
 
     return block
 
@@ -100,7 +100,7 @@ def signature(message: bytes, priv_key: PrivateKey) -> bytes:
 def verify(message: bytes, sig: bytes, pub_key: PublicKey) -> str:
     encrypted = util.bytes2int(sig)
     decrypted = encrypt_int(encrypted, pub_key.e, pub_key.n)
-    clearsig = util.int2bytes(decrypted)
+    clearsig = util.int2bytes(int(decrypted))
 
     message_hash = compute_hash(message)
 

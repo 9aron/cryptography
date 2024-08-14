@@ -24,7 +24,7 @@ def generate_random_string(length=8):
 
 
 # Measure energy consumption for rsa key generation
-def eval_rsa_decrypt(sock, msg, key_size, desc, form=BAR_FORMAT, n_t=N_TEST):
+def eval_rsa_decrypt(sock, key_size, desc, form=BAR_FORMAT, n_t=N_TEST):
     (pub_key, priv_key) = newkeys(key_size)
 
     msg = generate_random_string()
@@ -44,7 +44,7 @@ def eval_rsa_decrypt(sock, msg, key_size, desc, form=BAR_FORMAT, n_t=N_TEST):
 
 
 # Measure energy consumption for ecc key generation
-def eval_ecc_decrypt(sock, msg, curve, desc, form=BAR_FORMAT, n_t=N_TEST):
+def eval_ecc_decrypt(sock, curve, desc, form=BAR_FORMAT, n_t=N_TEST):
     c = get_curve(curve)
     (pub_key, priv_key) = make_keypair(c)
 
@@ -75,8 +75,8 @@ for lvl, r_ks, e_ks in zip(SEC_LVL, RSA_KEYSIZE, EC):
     r_des = f"[+] decryption in {r_ks} bit rsa key"
     e_des = f"[+] decryption in {e_ks[4:7]} bit ecc key"
 
-    rsa_avg_t = eval_rsa_decrypt(sock, msg, int(r_ks), r_des)
-    ecc_avg_t = eval_ecc_decrypt(sock, msg, e_ks, e_des)
+    rsa_avg_t = eval_rsa_decrypt(sock, int(r_ks), r_des)
+    ecc_avg_t = eval_ecc_decrypt(sock, e_ks, e_des)
 
     data.append({'sec_lvl': lvl, 'rsa_keysize': r_ks, 'rsa_energy': rsa_avg_t, 'ecc_keysize': int(e_ks[4:7]), 'ecc_energy': ecc_avg_t})
 

@@ -24,7 +24,7 @@ def generate_random_string(length=8):
 
 
 # Measure energy consumption for rsa key generation
-def eval_rsa_verify(sock, msg, key_size, desc, form=BAR_FORMAT, n_t=N_TEST):
+def eval_rsa_verify(sock, key_size, desc, form=BAR_FORMAT, n_t=N_TEST):
     (pub_key, priv_key) = newkeys(key_size)
 
     msg = generate_random_string()
@@ -46,7 +46,7 @@ def eval_rsa_verify(sock, msg, key_size, desc, form=BAR_FORMAT, n_t=N_TEST):
 
 
 # Measure energy consumption for ecc key generation
-def eval_ecc_verify(sock, msg, curve, desc, form=BAR_FORMAT, n_t=N_TEST):
+def eval_ecc_verify(sock, curve, desc, form=BAR_FORMAT, n_t=N_TEST):
     c = get_curve(curve)
     (pub_key, priv_key) = make_keypair(c)
 
@@ -79,8 +79,8 @@ for lvl, r_ks, e_ks in zip(SEC_LVL, RSA_KEYSIZE, EC):
     r_des = f"[+] verify in {r_ks} bit rsa key"
     e_des = f"[+] verify in {e_ks[4:7]} bit ecc key"
 
-    rsa_avg_t = eval_rsa_verify(sock, msg, int(r_ks), r_des)
-    ecc_avg_t = eval_ecc_verify(sock, msg, e_ks, e_des)
+    rsa_avg_t = eval_rsa_verify(sock, int(r_ks), r_des)
+    ecc_avg_t = eval_ecc_verify(sock, e_ks, e_des)
 
     data.append({'sec_lvl': lvl, 'rsa_keysize': r_ks, 'rsa_energy': rsa_avg_t, 'ecc_keysize': int(e_ks[4:7]), 'ecc_energy': ecc_avg_t})
 

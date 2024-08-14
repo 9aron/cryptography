@@ -2,7 +2,7 @@
 
 import hashlib
 import secrets
-from Crypto.Cipher import AES
+from Cryptodome.Cipher import AES
 
 def encrypt_AES_GCM(msg, secretKey):
     aesCipher = AES.new(secretKey, AES.MODE_GCM)
