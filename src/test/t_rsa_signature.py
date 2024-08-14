@@ -14,7 +14,6 @@ from rsa import *
 def profiled_sig(msg, priv_key):
     return signature(msg, priv_key)
 
-
 @profile
 def profiled_ver(msg, sig, pub_key):
     return verify(msg, sig, pub_key)

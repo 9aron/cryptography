@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ecc.core import SubGroup, Curve
-from ecc.key import Keypair
 
 
 # Elliptic Curves
@@ -61,6 +60,6 @@ def get_curve(name):
         sub_group = SubGroup(curve_params["p"], curve_params["g"], curve_params["n"], curve_params["h"])
         curve = Curve(curve_params["a"], curve_params["b"], sub_group, name)
     except KeyError:
-        raise RuntimeError("Missing parameters for curve %s" % name)
+        raise RuntimeError("Missing parameters %s" % name)
     return curve
 

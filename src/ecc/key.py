@@ -2,34 +2,51 @@
 
 import secrets
 
+import math  # Use sqrt, floor
+import functools # Use reduce (Python 2.5+ and 3.x)
+from functools import *
+from fractions import Fraction
 
-class Keypair(object):
-    def __init__(self, curve, priv=None, pub=None):
-        if priv is None and pub is None:
-            raise ValueError("Private and/or public key must be provided")
+
+class PublicKey:
+    __slots__ = ("curve", "pub")
+
+    def __init__(self, curve, pub):
         self.curve = curve
-        self.can_sign = True
-        self.can_encrypt = True
-        if priv is None:
-            self.can_sign = False
-        self.priv = priv
         self.pub = pub
-        if pub is None:
-            self.pub = self.priv * self.curve.g
 
-    def get_ecdh_secret(self, other_keypair):
-        # Don't check if both keypairs are on the same curve. Should raise a warning only
-        if self.can_sign and other_keypair.can_encrypt:
-            secret = self.priv * other_keypair.pub
-        elif self.can_encrypt and other_keypair.can_sign:
-            secret = self.pub * other_keypair.priv
-        else:
-            raise ValueError("Missing crypto material to generate DH secret")
-        return secret
+    def __repr__(self):
+        return f"PublicKey({self.curve.name}, ({self.pub.x}, {self.pub.y}))"
+
+    def __getstate__(self):
+        return self.curve, self.pub
+
+    def __setstate__(self, state):
+        self.curve, self.pub = state
+    
+    def compress_point(self):
+        return (self.pub.x, self.pub.y % 2)
+
+
+class PrivateKey:
+    __slot__ = ("curve", "priv")
+
+    def __init__(self, curve, priv):
+        self.curve = curve
+        self.priv = priv
+
+    def __repr__(self):
+        return f"PrivateKey({self.curve.name}, {self.priv})"
+
+    def __getstate__(self):
+        return self.curve, self.priv
+
+    def __setstate__(self, state):
+        self.curve, self.priv = state
 
 
 def make_keypair(curve):
     priv = secrets.randbelow(curve.field.n)
     pub = priv * curve.g
-    return Keypair(curve, priv, pub)
+    return PublicKey(curve, pub), PrivateKey(curve, priv)
 

@@ -125,7 +125,6 @@ class Point:
             else:
                 addend = self
             result = Inf(self.curve)
-            # Iterate over all bits starting by the LSB
             for bit in reversed([int(i) for i in bin(abs(other))[2:]]):
                 if bit == 1:
                     result += addend

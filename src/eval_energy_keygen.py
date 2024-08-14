@@ -25,7 +25,9 @@ def eval_rsa_keygen(sock, key_size, desc, form=BAR_FORMAT, n_t=N_TEST):
     times = []
     for _ in tqdm(range(n_t), desc=desc, bar_format=form):
         start_mwh = get_mwh_data(sock)
+
         newkeys(key_size)
+
         end_mwh = get_mwh_data(sock)
         times.append(end_mwh - start_mwh)
 
@@ -41,7 +43,9 @@ def eval_ecc_keygen(sock, curve, desc, form=BAR_FORMAT, n_t=N_TEST):
     times = []
     for _ in tqdm(range(n_t), desc=desc, bar_format=form):
         start_mwh = get_mwh_data(sock)
+
         make_keypair(c)
+
         end_mwh = get_mwh_data(sock)
         times.append(end_mwh - start_mwh)
 
