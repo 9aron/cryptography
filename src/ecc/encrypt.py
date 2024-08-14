@@ -15,8 +15,10 @@ def decrypt_AES_GCM(ciphertext, nonce, authTag, secretKey):
     return plaintext
 
 def ecc_point_to_256_bit_key(point):
-    sha = hashlib.sha256(int.to_bytes(point.x, 32, 'big'))
-    sha.update(int.to_bytes(point.y, 32, 'big'))
+    num_bytes_x = (point.x.bit_length() + 7) // 8
+    num_bytes_y = (point.y.bit_length() + 7) // 8
+    sha = hashlib.sha256(int.to_bytes(point.x, num_bytes_x, 'big'))
+    sha.update(int.to_bytes(point.y, num_bytes_y, 'big'))
     return sha.digest()
 
 def encrypt_ECC(msg, pubKey, curve):
