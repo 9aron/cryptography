@@ -2,8 +2,7 @@
 
 import struct
 import time
-import datetime
-import bluetooth
+import bluetooth # need to be installed
 
 
 def read_data(sock):
@@ -13,7 +12,6 @@ def read_data(sock):
         d += sock.recv(1024)
     assert len(d) == 130, len(d)
     return d
-
 
 def connect_to_usb_tester(addr):
     sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
@@ -30,7 +28,6 @@ def connect_to_usb_tester(addr):
         raise e
     return sock
 
-
 def get_mwh_data(sock):
     d = b""
 
@@ -40,9 +37,7 @@ def get_mwh_data(sock):
 
     _, mwh = struct.unpack(">II", d[16 : 16 + 8])  # Skip mAh, unpack mWh
 
-    # TODO return time with mwh
     return mwh
-
 
 
 if __name__ == '__main__':
@@ -51,7 +46,10 @@ if __name__ == '__main__':
     sock = connect_to_usb_tester(MAC) # change config.MAC to the mac addr
 
     while True:
-        print(get_mwh_data(sock))
-        time.sleep(1)
+        start_mwh = get_mwh_data(sock)
+        # do some here
+        end_mwh = get_mwh_data(sock)
+
+        energy = end_mwh - start_mwh
 
     sock.close()

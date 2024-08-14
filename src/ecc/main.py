@@ -14,7 +14,6 @@ def point_multiplication(scalar, point):
     return scalar * point
 
 
-# shared key
 def generate_initial_shared_key(idedge, prk):
     h1_idedge = hash_function(idedge)
     ksh = xor_hex_strings(h1_idedge, prk)
@@ -45,7 +44,6 @@ def update_shared_key_for_leaving_node(ksh, idni, curve, base_point, nList):
     return ksh, gksh, nList
 
 
-# text
 def convert_text_to_blocks(plaintext, p):
     N = (p - 8) // 8
     
@@ -72,6 +70,7 @@ def secure_blocks(blocks, InV):
         previous_block = secured_block
 
     return secured_blocks
+
 
 def map_to_curve(xi, curve):
     while True:

@@ -24,3 +24,5 @@ except:
 (pub_key, priv_key) = profiled_newkeys(key_size)
 print(pub_key, priv_key, sep='\n\n')
 
+print(pub_key.n)
+
