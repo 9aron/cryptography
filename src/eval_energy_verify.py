@@ -108,7 +108,7 @@ else:
         for row in data:
             writer.writerow(row)
 
-print(f"[+] Data has been written to {csv_file_path}")
+print(f"[+] Data has been written to {csv_file_path}\n")
 
 
 # Print results
