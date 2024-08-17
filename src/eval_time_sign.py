@@ -23,7 +23,7 @@ from rsa import newkeys
 from rsa import encrypt, decrypt
 def generate_random_string(length=8):
     characters = string.ascii_letters + string.digits + string.punctuation
-    s = ''.join(random.choice(characters) for _ in range(length))
+    s = ''.join(random.choice(characters) for _ in range(random.randint(1, length)))
     return s.encode('utf-8')
 (pub_key, priv_key) = newkeys({key_size})
 msg = generate_random_string()
@@ -50,7 +50,7 @@ from ecc import make_keypair, get_curve
 from ecc import encrypt_ECC, decrypt_ECC
 def generate_random_string(length=8):
     characters = string.ascii_letters + string.digits + string.punctuation
-    s = ''.join(random.choice(characters) for _ in range(length))
+    s = ''.join(random.choice(characters) for _ in range(random.randint(1, length)))
     return s.encode('utf-8')
 c = get_curve('{curve}')
 (pub_key, priv_key) = make_keypair(c)

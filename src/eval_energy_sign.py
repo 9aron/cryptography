@@ -19,7 +19,7 @@ csv_file_path = SIG_ENERGY
 
 def generate_random_string(length=8):
     characters = string.ascii_letters + string.digits + string.punctuation
-    s = ''.join(random.choice(characters) for _ in range(length))
+    s = ''.join(random.choice(characters) for _ in range(random.randint(1, length)))
     return s.encode('utf-8')
 
 
