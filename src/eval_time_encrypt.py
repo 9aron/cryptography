@@ -11,7 +11,7 @@ from tqdm import tqdm
 from config import *
 
 
-csv_file_path = 'csv/8_encrypt_exectime.csv' # TODO put this in config files, and make code for it to exec well
+csv_file_path = ENCRYPT_EXEC
 
 
 # Measure execution time for RSA key generation
@@ -28,7 +28,6 @@ def generate_random_string(length=8):
 (pub_key, priv_key) = newkeys({key_size})
 msg = generate_random_string()
 """
-
         
     times = []
     for _ in tqdm(range(n_t), desc=desc, bar_format=form):
@@ -103,7 +102,7 @@ else:
         for row in data:
             writer.writerow(row)
 
-print(f"[+] Data has been written to {csv_file_path}")
+print(f"[+] Data has been written to {csv_file_path}\n")
 
 
 # Print results
