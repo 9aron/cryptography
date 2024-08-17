@@ -14,7 +14,7 @@ from ecc import *
 from um25c import get_mwh_data, connect_to_usb_tester
 
 
-csv_file_path = 'csv/sign_energy.csv' # TODO put this in config files, and make code for it to exec well
+csv_file_path = SIG_ENERGY
 
 
 def generate_random_string(length=8):
@@ -65,7 +65,7 @@ def eval_ecc_sign(sock, curve, desc, form=BAR_FORMAT, n_t=N_TEST):
 
 
 # evaluation 
-print('[+] evaluating energy consumption for rsa and ecc')
+print('[+] evaluating energy consumption for rsa and ecc signature')
 
 sock = connect_to_usb_tester(MAC)
 
