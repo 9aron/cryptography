@@ -12,11 +12,11 @@ from ecc import *
 
 @profile
 def profiled_sig(msg, priv_key, curve):
-    return generate_ecc_sig(priv_key, msg, curve)
+    return generate_ecc_sig(priv_key, msg.encode('utf-8'), curve)
 
 @profile
 def profiled_ver(msg, sig, pub_key, curve):
-    return verify_ecc_sig(pub_key, msg, sig, curve)
+    return verify_ecc_sig(pub_key, msg.encode('utf-8'), sig, curve)
 
 try:
     curve  = sys.argv[1]

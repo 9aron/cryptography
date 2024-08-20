@@ -4,8 +4,6 @@ import os
 import csv
 import timeit
 import pprint
-import random
-import string
 from tqdm import tqdm
 
 from config import *
@@ -15,39 +13,37 @@ csv_file_path = SIG_EXEC
 
 
 # Measure execution time for RSA key generation
-def eval_rsa_decrypt(key_size, desc, form=BAR_FORMAT, n_t=N_TEST):
+def eval_rsa_sig(key_size, desc, form=BAR_FORMAT, n_t=N_TEST):
     rsa_setup_code = f"""
 import random
 import string
 from rsa import newkeys
-from rsa import encrypt, decrypt
+from rsa import signature, verify
 def generate_random_string(length=8):
     characters = string.ascii_letters + string.digits + string.punctuation
     s = ''.join(random.choice(characters) for _ in range(random.randint(1, length)))
     return s.encode('utf-8')
 (pub_key, priv_key) = newkeys({key_size})
 msg = generate_random_string()
-crypted = encrypt(msg, pub_key)
 """
-
         
     times = []
     for _ in tqdm(range(n_t), desc=desc, bar_format=form):
-        rsa_key_gen_time = timeit.timeit(stmt="decrypt(crypted, priv_key)", setup=rsa_setup_code, number=1)
-        times.append(rsa_key_gen_time)
+        rsa_sig_gen_time = timeit.timeit(stmt="signature(msg, priv_key)", setup=rsa_setup_code, number=1)
+        times.append(rsa_sig_gen_time)
 
-    average_rsa_key_gen_time = sum(times) / N_TEST
+    average_rsa_sig_gen_time = sum(times) / N_TEST
 
-    return average_rsa_key_gen_time
+    return average_rsa_sig_gen_time
 
 
 # Measure execution time for ECC key generation
-def eval_ecc_decrypt(curve, desc, form=BAR_FORMAT, n_t=N_TEST):
+def eval_ecc_sig(curve, desc, form=BAR_FORMAT, n_t=N_TEST):
     ecc_setup_code = f"""
 import random
 import string
 from ecc import make_keypair, get_curve
-from ecc import encrypt_ECC, decrypt_ECC
+from ecc import generate_ecc_sig
 def generate_random_string(length=8):
     characters = string.ascii_letters + string.digits + string.punctuation
     s = ''.join(random.choice(characters) for _ in range(random.randint(1, length)))
@@ -55,30 +51,29 @@ def generate_random_string(length=8):
 c = get_curve('{curve}')
 (pub_key, priv_key) = make_keypair(c)
 msg = generate_random_string()
-crypted = encrypt_ECC(msg, pub_key, c)
 """
 
     times = []
     for _ in tqdm(range(n_t), desc=desc, bar_format=form):
-        ecc_key_gen_time = timeit.timeit(stmt="decrypt_ECC(crypted, priv_key)", setup=ecc_setup_code, number=1)
-        times.append(ecc_key_gen_time)
+        ecc_sig_gen_time = timeit.timeit(stmt="generate_ecc_sig(priv_key, msg, c)", setup=ecc_setup_code, number=1)
+        times.append(ecc_sig_gen_time)
 
-    average_ecc_key_gen_time = sum(times) / N_TEST
+    average_ecc_sig_gen_time = sum(times) / N_TEST
 
-    return average_ecc_key_gen_time
+    return average_ecc_sig_gen_time
 
 
 # evaluation 
-print('[+] evaluating exection time for rsa and ecc')
+print('[+] evaluating signature generation time for rsa and ecc')
 
 data = []
 for lvl, r_ks, e_ks in zip(SEC_LVL, RSA_KEYSIZE, EC):
     print(f"\n[+] security level {lvl}")
-    r_des = f"[+] decryption in {r_ks} bit rsa key"
-    e_des = f"[+] decryption in {e_ks[4:7]} bit ecc key"
+    r_des = f"[+] signature in {r_ks} bit rsa key"
+    e_des = f"[+] signature in {e_ks[4:7]} bit ecc key"
 
-    rsa_avg_t = eval_rsa_decrypt(int(r_ks), r_des)
-    ecc_avg_t = eval_ecc_decrypt(e_ks, e_des)
+    rsa_avg_t = eval_rsa_sig(int(r_ks), r_des)
+    ecc_avg_t = eval_ecc_sig(e_ks, e_des)
 
     data.append({'sec_lvl': lvl, 'rsa_keysize': r_ks, 'rsa_exec_time': rsa_avg_t, 'ecc_keysize': int(e_ks[4:7]), 'ecc_exec_time': ecc_avg_t})
 
