@@ -37,7 +37,7 @@ eval_ecc_mem(curve)
 snapshot = tracemalloc.take_snapshot()
 top_stats = snapshot.statistics('lineno')
 
-print(tracemalloc.get_traced_memory()[0])
+print(tracemalloc.get_traced_memory()[1])
 
 tracemalloc.stop()
 
